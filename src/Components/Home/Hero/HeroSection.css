@@ -1,155 +1,89 @@
-.heroMain {
-  background-color: #f4e5e0;
-  background-image: url("../../../Assets/slideshow-pattern.png");
-  background-size: cover;
-  padding: 0 160px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-
-.sectionleft {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-  width: 50%;
-}
-
-.sectionleft p {
+.hero {
   position: relative;
-  padding-left: 50px;
-  color: #c22928;
-  text-transform: uppercase;
-  font-weight: 500;
-}
-
-.sectionleft p::before {
-  content: "";
-  display: block;
-  width: 35px;
-  height: 2px;
-  background-color: #c32929;
-  position: absolute;
-  left: 0;
-  top: 50%;
-  transform: translateY(-50%);
-}
-
-.sectionleft h1 {
-  font-size: 70px;
-  text-transform: uppercase;
-  font-weight: 700;
-}
-
-.heroLink {
-  display: flex;
-}
-
-.sectionleft a {
-  text-decoration: none;
-  color: black;
-}
-
-.sectionleft a {
-  position: relative;
-}
-
-.sectionleft a::after {
-  content: "";
-  position: absolute;
-  left: 0;
-  bottom: -5px;
-  width: 75%;
-  border-bottom: 2px solid black;
-  transition: width 0.2s ease;
-}
-
-.sectionleft a:hover::after {
   width: 100%;
-}
-
-.sectionleft h5 {
+  height: 100vh;
+  overflow: hidden;
+  color: white;
   display: flex;
-  font-size: 14px;
-  text-transform: uppercase;
-  font-weight: 500;
-}
-
-.sectionright {
-  display: flex;
-  flex-direction: column;
   align-items: center;
-  justify-content: center;
-  width: 50%;
-  position: relative;
 }
 
-.canvasModel {
-  height: 700px !important;
-}
-
-.heroColorBtn {
-  display: flex;
-  gap: 10px;
-  margin-top: 20px;
-  justify-content: center;
+/* Video */
+.heroVideo {
   position: absolute;
-  bottom: 130px;
+  top: 50%;
+  left: 50%;
+  min-width: 100%;
+  min-height: 100%;
+  transform: translate(-50%, -50%);
+  object-fit: cover;
+  z-index: 1;
 }
 
-.heroColorBtn button {
-  border-radius: 50%;
-  padding: 10px;
-  border: 1px solid white;
+/* Dark overlay */
+.heroOverlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  z-index: 2;
 }
 
-@media screen and (max-width: 768px) {
-  .heroMain {
-    padding: 30px 60px;
-  }
-
-  .sectionleft h1 {
-    font-size: 50px;
-  }
-
-  .canvasModel {
-    height: 400px !important;
-  }
-
-  .heroColorBtn {
-    bottom: 60px;
-  }
+/* Content */
+.heroContent {
+  position: relative;
+  z-index: 3;
+  max-width: 700px;
+  padding-left: 160px;
 }
 
-@media screen and (max-width: 450px) {
-  .heroMain {
-    padding: 45px 15px;
+.heroContent h1 {
+  font-size: 72px;
+  font-weight: 600;
+  line-height: 1.05;
+}
+
+.heroContent p {
+  font-size: 18px;
+  margin: 20px 0 40px;
+  opacity: 0.9;
+}
+
+.heroBtn {
+  display: inline-block;
+  padding: 14px 28px;
+  background: white;
+  color: black;
+  border-radius: 30px;
+  text-decoration: none;
+  font-weight: 500;
+  transition: all 0.25s ease;
+}
+
+.heroBtn:hover {
+  transform: translateY(-2px);
+}
+
+/* Bottom features */
+.heroFeatures {
+  display: flex;
+  gap: 40px;
+  margin-top: 60px;
+  font-size: 14px;
+  opacity: 0.85;
+}
+
+/* Responsive */
+@media (max-width: 900px) {
+  .heroContent {
+    padding: 0 40px;
+  }
+
+  .heroContent h1 {
+    font-size: 48px;
+  }
+
+  .heroFeatures {
     flex-direction: column;
-    justify-content: normal;
-  }
-
-  .sectionleft {
-    width: 100%;
-  }
-
-  .sectionleft h1 {
-    font-size: 40px;
-  }
-
-  .sectionleft p {
-    font-size: 14px;
-  }
-
-  .sectionright {
-    width: 100%;
-  }
-
-  .canvasModel {
-    height: 300px !important;
-    width: 250px !important;
-  }
-
-  .heroColorBtn {
-    bottom: 10px;
+    gap: 12px;
   }
 }

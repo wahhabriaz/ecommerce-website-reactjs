@@ -42,11 +42,7 @@ const Navbar = () => {
       {/* Desktop Menu */}
       <nav className="navBar">
         <div className="logoLinkContainer">
-          <div className="logoContainer">
-            <Link to="/" onClick={scrollToTop}>
-              <img src={logo} alt="Logo" />
-            </Link>
-          </div>
+          
           <div className="linkContainer">
             <ul>
               <li>
@@ -75,6 +71,11 @@ const Navbar = () => {
                 </Link>
               </li>
             </ul>
+          </div>
+          <div className="logoContainer">
+            <Link to="/" onClick={scrollToTop}>
+              <img src={logo} alt="Logo" />
+            </Link>
           </div>
         </div>
         <div className="iconContainer">
