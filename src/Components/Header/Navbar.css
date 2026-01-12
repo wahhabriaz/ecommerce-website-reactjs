@@ -5,10 +5,10 @@
   padding: 35px 160px;
   position: relative;
   z-index: 10;
-  background-color: white;
+  background-color: transparent;
   position: sticky;
   top: 0;
-  box-shadow: 0 10px 33px rgba(0, 0, 0, 0.1);
+  /* box-shadow: 0 10px 33px rgba(0, 0, 0, 0.1); */
 }
 
 .logoLinkContainer {
