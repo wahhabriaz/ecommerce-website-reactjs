@@ -1,5 +1,18 @@
 const router = require("express").Router();
 const Product = require("../models/Product");
+const fs = require("fs");
+const path = require("path");
+
+function safeUnlink(relUrl) {
+  // only allow deleting from /uploads
+  if (!relUrl?.startsWith("/uploads/")) return;
+
+  const filePath = path.join(process.cwd(), "public", relUrl); 
+  // relUrl already starts with /uploads/...
+  fs.unlink(filePath, (err) => {
+    if (err) console.log("⚠️ delete file failed:", err.message);
+  });
+}
 
 // GET /api/products
 router.get("/", async (req, res) => {
@@ -38,18 +51,30 @@ router.post("/", async (req, res) => {
 
 // UPDATE product
 router.put("/:id", async (req, res) => {
+  const existing = await Product.findById(req.params.id);
+  if (!existing) return res.status(404).json({ message: "Product not found" });
+
+  const oldImages = existing.images || [];
+  const newImages = req.body.images || [];
+
+  // images removed by admin
+  const removed = oldImages.filter((img) => !newImages.includes(img));
+  removed.forEach(safeUnlink);
+
   const updated = await Product.findByIdAndUpdate(req.params.id, req.body, {
     new: true,
     runValidators: true,
   });
-  if (!updated) return res.status(404).json({ message: "Product not found" });
+
   res.json(updated);
 });
+
 
 // DELETE product
 router.delete("/:id", async (req, res) => {
   const deleted = await Product.findByIdAndDelete(req.params.id);
   if (!deleted) return res.status(404).json({ message: "Product not found" });
+  (deleted.images || []).forEach(safeUnlink);
   res.status(204).send();
 });
 
