@@ -37,11 +37,39 @@ export const apiSlice = createApi({
         body: formData,
       }),
     }),
+    getProductById: builder.query({
+  query: (id) => `/api/products/${id}`,
+  providesTags: (res, err, id) => [{ type: "Product", id }],
+}),
+
+updateProduct: builder.mutation({
+  query: ({ id, body }) => ({
+    url: `/api/products/${id}`,
+    method: "PUT",
+    body,
+  }),
+  invalidatesTags: (res, err, { id }) => [
+    { type: "Product", id },
+    { type: "Product", id: "LIST" },
+  ],
+}),
+
+deleteProduct: builder.mutation({
+  query: (id) => ({
+    url: `/api/products/${id}`,
+    method: "DELETE",
+  }),
+  invalidatesTags: [{ type: "Product", id: "LIST" }],
+}),
   }),
 });
 
 export const {
   useGetProductsQuery,
+  useGetProductByIdQuery,
   useCreateProductMutation,
+  useUpdateProductMutation,
+  useDeleteProductMutation,
   useUploadImagesMutation,
 } = apiSlice;
+
