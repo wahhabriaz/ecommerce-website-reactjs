@@ -7,6 +7,7 @@ const productRoutes = require("./routes/productRoutes");
 
 const app = express();
 const path = require("path");
+app.use("/uploads", express.static(path.join(__dirname, "../public/uploads")));
 app.use("/images", express.static(path.join(__dirname, "../public/images")));
 
 app.use(helmet());
