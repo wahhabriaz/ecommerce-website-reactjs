@@ -30,4 +30,23 @@ router.get("/:id", async (req, res) => {
   res.json(product);
 });
 
+// POST /api/products
+router.post("/", async (req, res) => {
+  const created = await Product.create(req.body);
+  res.status(201).json(created);
+});
+
+// PUT /api/products/:id
+router.put("/:id", async (req, res) => {
+  const updated = await Product.findByIdAndUpdate(req.params.id, req.body, { new: true });
+  res.json(updated);
+});
+
+// DELETE /api/products/:id
+router.delete("/:id", async (req, res) => {
+  await Product.findByIdAndDelete(req.params.id);
+  res.status(204).send();
+});
+
+
 module.exports = router;
