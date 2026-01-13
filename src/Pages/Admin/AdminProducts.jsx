@@ -13,14 +13,14 @@ import {
   TableCell,
   TableBody,
   Skeleton,
-  Pagination,
+  Pagination,IconButton, Dialog, DialogTitle, DialogContent, DialogActions
 } from "@mui/material";
 import { Link } from "react-router-dom";
-import { useGetProductsQuery } from "../../Features/api/apiSlice";
+import { useGetProductsQuery,useDeleteProductMutation } from "../../Features/api/apiSlice";
 import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
-import { IconButton, Dialog, DialogTitle, DialogContent, DialogActions } from "@mui/material";
-import { useDeleteProductMutation } from "../../Features/api/apiSlice";
+import Tooltip from "@mui/material/Tooltip";
+
 
 
 export default function AdminProducts() {
@@ -28,6 +28,7 @@ export default function AdminProducts() {
   const { data, isLoading, isError } = useGetProductsQuery({ page, limit: 12 });
   const [deleteProduct, { isLoading: deleting }] = useDeleteProductMutation();
 const [toDelete, setToDelete] = React.useState(null);
+const [deleteErr, setDeleteErr] = React.useState("");
 
 
   const items = data?.items ?? [];
@@ -86,12 +87,18 @@ const [toDelete, setToDelete] = React.useState(null);
                         {(p.stock ?? 0) > 0 ? <Chip label="In stock" size="small" /> : <Chip label="Out" size="small" />}
                       </TableCell>
                       <TableCell align="right">
-  <IconButton component={Link} to={`/admin/products/${p._id}/edit`}>
-    <EditOutlinedIcon />
-  </IconButton>
-  <IconButton onClick={() => setToDelete(p)}>
-    <DeleteOutlineIcon />
-  </IconButton>
+                    <Tooltip title="Edit">
+                    <IconButton component={Link} to={`/admin/products/${p._id}/edit`}>
+                        <EditOutlinedIcon />
+                    </IconButton>
+                    </Tooltip>
+
+                    <Tooltip title="Delete">
+                    <IconButton color="error" onClick={() => setToDelete(p)}>
+                        <DeleteOutlineIcon />
+                    </IconButton>
+                    </Tooltip>
+
 </TableCell>
 
                     </TableRow>
@@ -121,18 +128,21 @@ const [toDelete, setToDelete] = React.useState(null);
       variant="contained"
       disabled={deleting}
       onClick={async () => {
-        try {
-          await deleteProduct(toDelete._id).unwrap();
-          setToDelete(null);
-        } catch (e) {
-          // optional toast
-          setToDelete(null);
-        }
+       try {
+  setDeleteErr("");
+  await deleteProduct(toDelete._id).unwrap();
+  setToDelete(null);
+} catch (e) {
+  setDeleteErr(e?.data?.message || "Delete failed");
+}
+
       }}
     >
       Delete
     </Button>
   </DialogActions>
+  {deleteErr && <Typography color="error" variant="body2">{deleteErr}</Typography>}
+
 </Dialog>
 
     </>
