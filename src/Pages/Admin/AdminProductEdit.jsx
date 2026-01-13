@@ -11,6 +11,7 @@ import {
   useUpdateProductMutation,
   useUploadImagesMutation,
 } from "../../Features/api/apiSlice";
+import SortableImageGrid from "./SortableImageGrid";
 
 export default function AdminProductEdit() {
   const { id } = useParams();
@@ -162,49 +163,23 @@ export default function AdminProductEdit() {
                   <input hidden type="file" multiple accept="image/*" onChange={handlePickFiles} />
                 </Button>
 
-                <Grid container spacing={1}>
-                  {imageUrls.map((url) => (
-                    <Grid item xs={6} key={url}>
-                      <Box
-                        sx={{
-                          position: "relative",
-                          borderRadius: 2,
-                          overflow: "hidden",
-                          border: "1px solid rgba(0,0,0,0.12)",
-                          aspectRatio: "1 / 1",
-                        }}
-                      >
-                        <img
-                          src={`${base}${url}`}
-                          alt="preview"
-                          style={{ width: "100%", height: "100%", objectFit: "cover" }}
-                        />
-                        <IconButton
-                          size="small"
-                          onClick={() => removeImage(url)}
-                          sx={{
-                            position: "absolute",
-                            top: 6,
-                            right: 6,
-                            bgcolor: "rgba(0,0,0,0.55)",
-                            color: "white",
-                            "&:hover": { bgcolor: "rgba(0,0,0,0.75)" },
-                          }}
-                        >
-                          <DeleteOutlineIcon fontSize="small" />
-                        </IconButton>
-                      </Box>
-                    </Grid>
-                  ))}
-                </Grid>
+              
 
-                {imageUrls.length === 0 && (
-                  <Box sx={{ p: 2, borderRadius: 2, bgcolor: "action.hover" }}>
-                    <Typography variant="body2" sx={{ opacity: 0.8 }}>
-                      No images uploaded yet.
-                    </Typography>
-                  </Box>
-                )}
+                {imageUrls.length > 0 ? (
+  <SortableImageGrid
+    images={imageUrls}
+    setImages={setImageUrls}
+    baseUrl={base}
+    onRemove={(url) => removeImage(url)}
+  />
+) : (
+  <Box sx={{ p: 2, borderRadius: 2, bgcolor: "action.hover" }}>
+    <Typography variant="body2" sx={{ opacity: 0.8 }}>
+      No images uploaded yet.
+    </Typography>
+  </Box>
+)}
+
               </Stack>
             </CardContent>
           </Card>
