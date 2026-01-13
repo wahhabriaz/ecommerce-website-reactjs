@@ -36,17 +36,23 @@ router.post("/", async (req, res) => {
   res.status(201).json(created);
 });
 
-// PUT /api/products/:id
+// UPDATE product
 router.put("/:id", async (req, res) => {
-  const updated = await Product.findByIdAndUpdate(req.params.id, req.body, { new: true });
+  const updated = await Product.findByIdAndUpdate(req.params.id, req.body, {
+    new: true,
+    runValidators: true,
+  });
+  if (!updated) return res.status(404).json({ message: "Product not found" });
   res.json(updated);
 });
 
-// DELETE /api/products/:id
+// DELETE product
 router.delete("/:id", async (req, res) => {
-  await Product.findByIdAndDelete(req.params.id);
+  const deleted = await Product.findByIdAndDelete(req.params.id);
+  if (!deleted) return res.status(404).json({ message: "Product not found" });
   res.status(204).send();
 });
+
 
 
 module.exports = router;
