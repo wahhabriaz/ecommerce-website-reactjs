@@ -17,15 +17,24 @@ import {
 } from "@mui/material";
 import { Link } from "react-router-dom";
 import { useGetProductsQuery } from "../../Features/api/apiSlice";
+import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
+import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
+import { IconButton, Dialog, DialogTitle, DialogContent, DialogActions } from "@mui/material";
+import { useDeleteProductMutation } from "../../Features/api/apiSlice";
+
 
 export default function AdminProducts() {
   const [page, setPage] = React.useState(1);
   const { data, isLoading, isError } = useGetProductsQuery({ page, limit: 12 });
+  const [deleteProduct, { isLoading: deleting }] = useDeleteProductMutation();
+const [toDelete, setToDelete] = React.useState(null);
+
 
   const items = data?.items ?? [];
   const pages = data?.pages ?? 1;
 
   return (
+    <>
     <Stack spacing={2}>
       <Box sx={{ display: "flex", gap: 2, alignItems: "center", justifyContent: "space-between" }}>
         <Box>
@@ -62,6 +71,8 @@ export default function AdminProducts() {
                     <TableCell sx={{ fontWeight: 700 }}>Price</TableCell>
                     <TableCell sx={{ fontWeight: 700 }}>Stock</TableCell>
                     <TableCell sx={{ fontWeight: 700 }}>Status</TableCell>
+                    <TableCell sx={{ fontWeight: 700 }} align="right">Actions</TableCell>
+
                   </TableRow>
                 </TableHead>
                 <TableBody>
@@ -74,6 +85,15 @@ export default function AdminProducts() {
                       <TableCell>
                         {(p.stock ?? 0) > 0 ? <Chip label="In stock" size="small" /> : <Chip label="Out" size="small" />}
                       </TableCell>
+                      <TableCell align="right">
+  <IconButton component={Link} to={`/admin/products/${p._id}/edit`}>
+    <EditOutlinedIcon />
+  </IconButton>
+  <IconButton onClick={() => setToDelete(p)}>
+    <DeleteOutlineIcon />
+  </IconButton>
+</TableCell>
+
                     </TableRow>
                   ))}
                 </TableBody>
@@ -87,5 +107,35 @@ export default function AdminProducts() {
         </CardContent>
       </Card>
     </Stack>
+    <Dialog open={!!toDelete} onClose={() => setToDelete(null)}>
+  <DialogTitle>Delete product?</DialogTitle>
+  <DialogContent>
+    <Typography variant="body2" sx={{ mt: 1 }}>
+      This will permanently delete <b>{toDelete?.title}</b>.
+    </Typography>
+  </DialogContent>
+  <DialogActions>
+    <Button onClick={() => setToDelete(null)}>Cancel</Button>
+    <Button
+      color="error"
+      variant="contained"
+      disabled={deleting}
+      onClick={async () => {
+        try {
+          await deleteProduct(toDelete._id).unwrap();
+          setToDelete(null);
+        } catch (e) {
+          // optional toast
+          setToDelete(null);
+        }
+      }}
+    >
+      Delete
+    </Button>
+  </DialogActions>
+</Dialog>
+
+    </>
+    
   );
 }
