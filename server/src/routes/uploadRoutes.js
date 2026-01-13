@@ -1,8 +1,9 @@
 const router = require("express").Router();
 const uploadLocal = require("../middleware/uploadLocal");
+const { requireAuth, requireAdmin } = require("../middleware/auth");
 
 // field name must match form: "images"
-router.post("/", uploadLocal.array("images", 8), (req, res) => {
+router.post("/",requireAuth,requireAdmin, uploadLocal.array("images", 8), (req, res) => {
   const files = req.files || [];
 
   // return relative URLs that your frontend can store in DB

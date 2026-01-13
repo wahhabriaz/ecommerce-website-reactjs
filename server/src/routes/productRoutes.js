@@ -2,6 +2,7 @@ const router = require("express").Router();
 const Product = require("../models/Product");
 const fs = require("fs");
 const path = require("path");
+const { requireAuth, requireAdmin } = require("../middleware/auth");
 
 function safeUnlink(relUrl) {
   // only allow deleting from /uploads
@@ -44,13 +45,13 @@ router.get("/:id", async (req, res) => {
 });
 
 // POST /api/products
-router.post("/", async (req, res) => {
+router.post("/",requireAuth,requireAdmin, async (req, res) => {
   const created = await Product.create(req.body);
   res.status(201).json(created);
 });
 
 // UPDATE product
-router.put("/:id", async (req, res) => {
+router.put("/:id",requireAuth,requireAdmin, async (req, res) => {
   const existing = await Product.findById(req.params.id);
   if (!existing) return res.status(404).json({ message: "Product not found" });
 
@@ -71,7 +72,7 @@ router.put("/:id", async (req, res) => {
 
 
 // DELETE product
-router.delete("/:id", async (req, res) => {
+router.delete("/:id",requireAuth,requireAdmin, async (req, res) => {
   const deleted = await Product.findByIdAndDelete(req.params.id);
   if (!deleted) return res.status(404).json({ message: "Product not found" });
   (deleted.images || []).forEach(safeUnlink);
