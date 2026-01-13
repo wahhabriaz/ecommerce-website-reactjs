@@ -316,17 +316,17 @@ export default function SortableImageGrid({ images, setImages, baseUrl, onRemove
       <Dialog fullScreen open={fullOpen} onClose={closeFull}>
         <AppBar sx={{ position: "relative" }} elevation={0}>
           <Toolbar sx={{ gap: 1 }}>
-            <IconButton edge="start" color="inherit" onClick={closeFull} aria-label="close">
-              <CloseIcon />
-            </IconButton>
-
-            <Typography sx={{ ml: 1, flex: 1 }} variant="h6" component="div">
+              <Typography sx={{ ml: 1 }} variant="h6" component="div">
               Image Preview
             </Typography>
-
-            <Typography variant="body2" sx={{ opacity: 0.8 }}>
+<Typography variant="body2" sx={{ opacity: 0.8,flex:1,ml:1 }}>
               {idx >= 0 ? `${idx + 1} / ${images.length}` : ""}
             </Typography>
+          
+<IconButton edge="start" color="inherit" onClick={closeFull} aria-label="close">
+              <CloseIcon />
+            </IconButton>
+            
           </Toolbar>
         </AppBar>
 
