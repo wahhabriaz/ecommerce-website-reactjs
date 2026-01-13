@@ -1,18 +1,47 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
+const baseUrl = process.env.REACT_APP_API_URL || "http://localhost:5001";
+
 export const apiSlice = createApi({
   reducerPath: "api",
-  baseQuery: fetchBaseQuery({
-    baseUrl: process.env.REACT_APP_API_URL || "http://localhost:5001",
-  }),
+  baseQuery: fetchBaseQuery({ baseUrl, credentials: "omit", }),
+  tagTypes: ["Product"],
   endpoints: (builder) => ({
+    // List products (your API returns {items,total,page,pages})
     getProducts: builder.query({
-      query: () => "/api/products",
+      query: ({ page = 1, limit = 12 } = {}) => `/api/products?page=${page}&limit=${limit}`,
+      providesTags: (result) =>
+        result?.items
+          ? [
+              ...result.items.map((p) => ({ type: "Product", id: p._id })),
+              { type: "Product", id: "LIST" },
+            ]
+          : [{ type: "Product", id: "LIST" }],
     }),
-    getProductById: builder.query({
-      query: (id) => `/api/products/${id}`,
+
+    // Create product
+    createProduct: builder.mutation({
+      query: (body) => ({
+        url: "/api/products",
+        method: "POST",
+        body,
+      }),
+      invalidatesTags: [{ type: "Product", id: "LIST" }],
+    }),
+
+    // Upload images (multer) - MUST be FormData
+    uploadImages: builder.mutation({
+      query: (formData) => ({
+        url: "/api/uploads",
+        method: "POST",
+        body: formData,
+      }),
     }),
   }),
 });
 
-export const { useGetProductsQuery, useGetProductByIdQuery } = apiSlice;
+export const {
+  useGetProductsQuery,
+  useCreateProductMutation,
+  useUploadImagesMutation,
+} = apiSlice;
