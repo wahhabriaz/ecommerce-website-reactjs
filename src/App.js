@@ -24,6 +24,8 @@ import AdminLayout from "./Pages/Admin/AdminLayout";
 import AdminProducts from "./Pages/Admin/AdminProducts";
 import AdminProductNew from "./Pages/Admin/AdminProductNew";
 import AdminProductEdit from "./Pages/Admin/AdminProductEdit";
+import AdminGuard from "./Components/Admin/AdminGuard";
+import StoreLayout from "./Layouts/StoreLayout";
 
 const App = () => {
   return (
@@ -31,8 +33,9 @@ const App = () => {
       <Popup />
       <ScrollToTop />
       <BrowserRouter>
-        <Header />
+
         <Routes>
+          <Route element={<StoreLayout />}>
           <Route path="/" element={<Home />} />
           <Route path="/about" element={<About />} />
           <Route path="/shop" element={<Shop />} />
@@ -45,13 +48,21 @@ const App = () => {
           <Route path="/terms" element={<TermsConditions />} />
           <Route path="/cart" element={<ShoppingCart />} />
           <Route path="*" element={<NotFound />} />
-          <Route path="/admin" element={<AdminLayout />}>
-  <Route path="products" element={<AdminProducts />} />
-  <Route path="products/new" element={<AdminProductNew />} />
-    <Route path="products/:id/edit" element={<AdminProductEdit />} />
-</Route>
+          </Route>
+          <Route
+              path="/admin"
+              element={
+                <AdminGuard>
+                  <AdminLayout />
+                </AdminGuard>
+              }
+            >
+        <Route path="products" element={<AdminProducts />} />
+        <Route path="products/new" element={<AdminProductNew />} />
+        <Route path="products/:id/edit" element={<AdminProductEdit />} />
+      </Route>
         </Routes>
-        <Footer />
+       
         <Toaster />
       </BrowserRouter>
     </>
