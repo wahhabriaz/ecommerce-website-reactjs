@@ -4,7 +4,11 @@ const baseUrl = process.env.REACT_APP_API_URL || "http://localhost:5001";
 
 export const apiSlice = createApi({
   reducerPath: "api",
-  baseQuery: fetchBaseQuery({ baseUrl, credentials: "omit", }),
+  baseQuery: fetchBaseQuery({ baseUrl, credentials: "omit",prepareHeaders: (headers) => {
+    const token = localStorage.getItem("token");
+    if (token) headers.set("authorization", `Bearer ${token}`);
+    return headers;
+  }, }),
   tagTypes: ["Product"],
   endpoints: (builder) => ({
     // List products (your API returns {items,total,page,pages})
@@ -61,6 +65,16 @@ deleteProduct: builder.mutation({
   }),
   invalidatesTags: [{ type: "Product", id: "LIST" }],
 }),
+login: builder.mutation({
+  query: (body) => ({ url: "/api/auth/login", method: "POST", body }),
+}),
+register: builder.mutation({
+  query: (body) => ({ url: "/api/auth/register", method: "POST", body }),
+}),
+me: builder.query({
+  query: () => ({ url: "/api/auth/me" }),
+}),
+
   }),
 });
 
@@ -71,5 +85,7 @@ export const {
   useUpdateProductMutation,
   useDeleteProductMutation,
   useUploadImagesMutation,
+  useLoginMutation, useMeQuery,useRegisterMutation,
+
 } = apiSlice;
 
