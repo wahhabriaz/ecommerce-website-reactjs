@@ -12,9 +12,12 @@ import {
   IconButton,
   Divider,
   Container,
-  useMediaQuery,
+  useMediaQuery, Tooltip
 } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
+import { useNavigate } from "react-router-dom";
+import { logout } from "../../utils/auth";
+import { Logout } from "@mui/icons-material";
 
 const drawerWidth = 260;
 
@@ -22,7 +25,7 @@ export default function AdminLayout() {
   const [open, setOpen] = React.useState(false);
   const isMdUp = useMediaQuery("(min-width:900px)");
   const location = useLocation();
-
+const navigate = useNavigate();
   const nav = [
     { label: "Products", to: "/admin/products" },
     { label: "New Product", to: "/admin/products/new" },
@@ -51,6 +54,7 @@ export default function AdminLayout() {
           </ListItemButton>
         ))}
       </List>
+      
     </Box>
   );
 
@@ -70,6 +74,17 @@ export default function AdminLayout() {
           <Typography variant="body2" sx={{ opacity: 0.8 }}>
             Local Dev
           </Typography>
+          <Tooltip title="Logout">
+  <IconButton
+    onClick={() => {
+      logout();
+      navigate("/loginSignUp");
+    }}
+  >
+   
+    <Logout/>
+  </IconButton>
+</Tooltip>
         </Toolbar>
       </AppBar>
 
